@@ -59,33 +59,34 @@ export default class Demo extends Phaser.Scene {
 
   update(time: number, delta: number): void {
     if (this.cursors.left.isDown) {
-        this.player.setVelocityX(-160);
-        this.player.setVelocityY(0);
-        this.player.anims.play('left', true);
-    }
-    else if (this.cursors.right.isDown) {
-        this.player.setVelocityX(160);
-        this.player.setVelocityY(0);
-        this.player.anims.play('right', true);
-    }
-    else if (this.cursors.down.isDown) {
-      this.player.setVelocityY(160);
+      this.player.setVelocityX(-160);
+    } else if (this.cursors.right.isDown) {
+      this.player.setVelocityX(160);
+      
+    } else if (!this.cursors.right.isDown && !this.cursors.left.isDown) {
       this.player.setVelocityX(0);
-      this.player.anims.play('down', true);
-    }
-    else if (this.cursors.up.isDown) {
-      this.player.setVelocityY(-160);
-      this.player.setVelocityX(0);
-      this.player.anims.play('up', true);
-    }    
-    else {
-        this.player.anims.play('idle', true);
-        this.player.setVelocityX(0);
-        this.player.setVelocityY(0);
     }
 
-    if (this.cursors.up.isDown && this.player.body.touching.down) {
-        this.player.setVelocityY(-500);
+    if (this.cursors.down.isDown) {
+      this.player.setVelocityY(160);
+      
+    } else if (this.cursors.up.isDown) {
+      this.player.setVelocityY(-160);
+      
+    } else if (!this.cursors.down.isDown && !this.cursors.up.isDown) {
+      this.player.setVelocityY(0);
+    }
+
+    if (this.cursors.left.isDown) {
+      this.player.anims.play('left', true);
+    } else if (this.cursors.right.isDown) {
+      this.player.anims.play('right', true);
+    } else if (this.cursors.down.isDown) {
+      this.player.anims.play('down', true);
+    } else if (this.cursors.up.isDown) {
+      this.player.anims.play('up', true);
+    } else {
+      this.player.anims.play('idle', true);
     }
   }
 }
