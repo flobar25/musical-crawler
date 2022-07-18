@@ -1,5 +1,7 @@
 import Phaser from 'phaser';
 import * as Tone from 'tone';
+import KeyboardState from '../modules/KeyboardState';
+import Weapon from '../modules/Weapon';
 
 const SPRITESHEET = 'spritesheet';
 const DRUMS = 'drums';
@@ -21,13 +23,15 @@ const MONSTER_VELOCITY = 80;
 
 
 export default class Demo extends Phaser.Scene {
+  keyboard!: KeyboardState;
+  weapons!: Map<String, Weapon>;
+
   player!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
   monster!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
   cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
   attackRate!: number;
   synth!: Tone.Synth;
   bpm!: number;
-
 
   quarterNoteDuration!: number;
   frameDuration!: number;
@@ -38,36 +42,30 @@ export default class Demo extends Phaser.Scene {
   synth2!: Phaser.Sound.BaseSound;
   musicResolution = 4 ; // a quarter of a quarter note
 
-  // keyboard state
-  qTime = -1;
-  wTime = -1;
-  eTime = -1;
-  qKey!: Phaser.Input.Keyboard.Key;
-  wKey!: Phaser.Input.Keyboard.Key;
-  eKey!: Phaser.Input.Keyboard.Key;
-
-
   constructor() {
     super('GameScene');
+    this.bpm = 109;
   }
 
   preload() {
     this.load.spritesheet(SPRITESHEET, 'assets/personajes-lanto.png', { frameWidth: 32, frameHeight: 32 });
     this.load.audio(DRUMS, 'assets/music/OLIVER_hat_drum_loop_ride_clap_109.wav')
-    this.load.audio(SYNTH1, 'assets/music/beep1.wav')
-    this.load.audio(SYNTH2, 'assets/music/wah.wav')
+
+    this.keyboard = new KeyboardState(this);
+    this.keyboard.preload();
+
+    this.weapons = new Map();
+    this.weapons.set('q', new Weapon(this, 'assets/music/beep1.wav', SYNTH1, this.bpm, this.physics.world.fps, 2));
+    this.weapons.set('w', new Weapon(this, 'assets/music/wah.wav', SYNTH2, this.bpm, this.physics.world.fps, 1));
+    this.weapons.forEach(w => this.load.audio(w.key, w.soundFile));
   }
 
   create() {
-    // keyboard
-    this.qKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
-    this.wKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
-    this.eKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
+    this.keyboard.create();
+    this.weapons.forEach(w => this.sound.add(w.key));
 
     // sound
     this.drums = this.sound.add(DRUMS)
-    this.synth1 = this.sound.add(SYNTH1)
-    this.synth2 = this.sound.add(SYNTH2)
     this.sound.pauseOnBlur = false;
 
     // characters
@@ -77,21 +75,32 @@ export default class Demo extends Phaser.Scene {
     this.createPlayerAnims();
     this.createMonsterAnims();
 
-    this.bpm = 109;
+    
     this.quarterNoteDuration = 60000 / this.bpm;
     this.halfNoteDuration = this.quarterNoteDuration * 2;
     this.frameDuration = 1000 / this.physics.world.fps;
-    this.attackRate = 1;
 
     Tone.start().then(() => this.synth = new Tone.Synth().toDestination());
   }
 
   update(time: number, delta: number): void {
+    this.keyboard.update(time, delta);
+    this.weapons.forEach((v, k) => {
+      v.activate(this.keyboard.times.get(k), this.musicStartTime);
+    })
+
+    this.weapons.forEach(w => {
+      if (w.handleUpdate(time, delta)) {
+        this.sound.play(w.key);
+      }
+    });
+
     this.handleMusic(time);
     this.handlePlayerMoves();
     this.handleMonsterMoves(this.monster);
-    this.handlePlayerAttacks(time);
   }
+
+  
 
   private handleMusic(time: number) {
     if (!this.synth) {
@@ -106,32 +115,15 @@ export default class Demo extends Phaser.Scene {
   }
 
   private handlePlayerAttacks(time: number) {
-    if (this.qTime === -1 && this.qKey.isDown) {
-      this.qTime = time;
-    }
-    if (this.wTime === -1 && this.wKey.isDown) {
-      this.wTime = time;
-    }
-    if (this.eTime === -1 && this.eKey.isDown) {
-      this.eTime = time;
-    }
 
-    if (this.qKey.isUp) {
-      this.qTime = -1;
-    }
-    if (this.wKey.isUp) {
-      this.wTime = -1;
-    }
-    if (this.eKey.isUp) {
-      this.eTime = -1;
-    }
+
 
     // console.log(this.qTime);
     let relativeTime = time - this.musicStartTime;
     
 
-    if (this.qTime !== -1) {
-      let relativeQTime = this.qTime - this.musicStartTime;
+    if (this.keyboard.qTime !== -1) {
+      let relativeQTime = this.keyboard.qTime - this.musicStartTime;
       let lagTime = relativeQTime % this.quarterNoteDuration;
       let lagTick = Math.floor(lagTime / (this.quarterNoteDuration / this.musicResolution));
       let delay = lagTick * (this.quarterNoteDuration / this.musicResolution)
@@ -143,7 +135,7 @@ export default class Demo extends Phaser.Scene {
       }
     }
 
-    if (this.wTime !== -1) {
+    if (this.keyboard.wTime !== -1) {
       if ((time - this.musicStartTime) % this.halfNoteDuration <= this.frameDuration) {
         this.synth2.play();
       }
