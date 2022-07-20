@@ -1,0 +1,24 @@
+{
+  "prettier.printWidth": 150,
+  "prettier.requireConfig": false,
+  "prettier.singleQuote": true,
+  "editor.formatOnSave": true,
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "eslint.validate": [
+    "javascript",
+    "typescipt"
+  ],
+  "launch": {
+    "configurations": [],
+    "compounds": []
+  },
+  "eslint.packageManager": "yarn"
+}
