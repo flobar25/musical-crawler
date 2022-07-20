@@ -21,7 +21,6 @@ const MONSTER_UP_ANIM = 'monsterupanim';
 const PLAYER_VELOCITY = 160;
 const MONSTER_VELOCITY = 80;
 
-
 export default class Demo extends Phaser.Scene {
   keyboard!: KeyboardState;
   weapons!: Map<String, Weapon>;
@@ -40,7 +39,7 @@ export default class Demo extends Phaser.Scene {
   synth1!: Phaser.Sound.BaseSound;
   halfNoteDuration!: number;
   synth2!: Phaser.Sound.BaseSound;
-  musicResolution = 4 ; // a quarter of a quarter note
+  musicResolution = 4; // a quarter of a quarter note
 
   constructor() {
     super('GameScene');
@@ -49,7 +48,7 @@ export default class Demo extends Phaser.Scene {
 
   preload() {
     this.load.spritesheet(SPRITESHEET, 'assets/personajes-lanto.png', { frameWidth: 32, frameHeight: 32 });
-    this.load.audio(DRUMS, 'assets/music/OLIVER_hat_drum_loop_ride_clap_109.wav')
+    this.load.audio(DRUMS, 'assets/music/OLIVER_hat_drum_loop_ride_clap_109.wav');
 
     this.keyboard = new KeyboardState(this);
     this.keyboard.preload();
@@ -57,15 +56,15 @@ export default class Demo extends Phaser.Scene {
     this.weapons = new Map();
     this.weapons.set('q', new Weapon(this, 'assets/music/beep1.wav', SYNTH1, this.bpm, this.physics.world.fps, 2));
     this.weapons.set('w', new Weapon(this, 'assets/music/wah.wav', SYNTH2, this.bpm, this.physics.world.fps, 1));
-    this.weapons.forEach(w => this.load.audio(w.key, w.soundFile));
+    this.weapons.forEach((w) => this.load.audio(w.key, w.soundFile));
   }
 
   create() {
     this.keyboard.create();
-    this.weapons.forEach(w => this.sound.add(w.key));
+    this.weapons.forEach((w) => this.sound.add(w.key));
 
     // sound
-    this.drums = this.sound.add(DRUMS)
+    this.drums = this.sound.add(DRUMS);
     this.sound.pauseOnBlur = false;
 
     // characters
@@ -75,21 +74,20 @@ export default class Demo extends Phaser.Scene {
     this.createPlayerAnims();
     this.createMonsterAnims();
 
-    
     this.quarterNoteDuration = 60000 / this.bpm;
     this.halfNoteDuration = this.quarterNoteDuration * 2;
     this.frameDuration = 1000 / this.physics.world.fps;
 
-    Tone.start().then(() => this.synth = new Tone.Synth().toDestination());
+    Tone.start().then(() => (this.synth = new Tone.Synth().toDestination()));
   }
 
   update(time: number, delta: number): void {
     this.keyboard.update(time, delta);
     this.weapons.forEach((v, k) => {
       v.activate(this.keyboard.times.get(k), this.musicStartTime);
-    })
+    });
 
-    this.weapons.forEach(w => {
+    this.weapons.forEach((w) => {
       if (w.handleUpdate(time, delta)) {
         this.sound.play(w.key);
       }
@@ -99,8 +97,6 @@ export default class Demo extends Phaser.Scene {
     this.handlePlayerMoves();
     this.handleMonsterMoves(this.monster);
   }
-
-  
 
   private handleMusic(time: number) {
     if (!this.synth) {
@@ -115,20 +111,16 @@ export default class Demo extends Phaser.Scene {
   }
 
   private handlePlayerAttacks(time: number) {
-
-
-
     // console.log(this.qTime);
     let relativeTime = time - this.musicStartTime;
-    
 
     if (this.keyboard.qTime !== -1) {
       let relativeQTime = this.keyboard.qTime - this.musicStartTime;
       let lagTime = relativeQTime % this.quarterNoteDuration;
       let lagTick = Math.floor(lagTime / (this.quarterNoteDuration / this.musicResolution));
-      let delay = lagTick * (this.quarterNoteDuration / this.musicResolution)
+      let delay = lagTick * (this.quarterNoteDuration / this.musicResolution);
       // let delay = ((relativeQTime % this.quarterNoteDuration) / (this.musicResolution*this.quarterNoteDuration)) * (this.quarterNoteDuration * this.musicResolution);
-      console.log(delay)
+      console.log(delay);
 
       if ((relativeTime - delay) % (this.quarterNoteDuration / 2) <= this.frameDuration) {
         this.synth1.play();
@@ -140,17 +132,13 @@ export default class Demo extends Phaser.Scene {
         this.synth2.play();
       }
     }
-
-
   }
-
 
   private handlePlayerMoves() {
     if (this.cursors.left.isDown) {
       this.player.setVelocityX(-PLAYER_VELOCITY);
     } else if (this.cursors.right.isDown) {
       this.player.setVelocityX(PLAYER_VELOCITY);
-
     } else if (!this.cursors.right.isDown && !this.cursors.left.isDown) {
       this.player.setVelocityX(0);
     }
@@ -159,7 +147,6 @@ export default class Demo extends Phaser.Scene {
       this.player.setVelocityY(PLAYER_VELOCITY);
     } else if (this.cursors.up.isDown) {
       this.player.setVelocityY(-PLAYER_VELOCITY);
-
     } else if (!this.cursors.down.isDown && !this.cursors.up.isDown) {
       this.player.setVelocityY(0);
     }
@@ -217,28 +204,28 @@ export default class Demo extends Phaser.Scene {
       key: PLAYER_LEFT_ANIM,
       frames: this.anims.generateFrameNumbers(SPRITESHEET, { start: 12, end: 14 }),
       frameRate: 10,
-      repeat: -1
+      repeat: -1,
     });
 
     this.anims.create({
       key: PLAYER_RIGHT_ANIM,
       frames: this.anims.generateFrameNumbers(SPRITESHEET, { start: 24, end: 26 }),
       frameRate: 10,
-      repeat: -1
+      repeat: -1,
     });
 
     this.anims.create({
       key: PLAYER_UP_ANIM,
       frames: this.anims.generateFrameNumbers(SPRITESHEET, { start: 36, end: 38 }),
       frameRate: 10,
-      repeat: -1
+      repeat: -1,
     });
 
     this.anims.create({
       key: PLAYER_DOWN_ANIM,
       frames: this.anims.generateFrameNumbers(SPRITESHEET, { start: 0, end: 2 }),
       frameRate: 10,
-      repeat: -1
+      repeat: -1,
     });
   }
 
@@ -247,28 +234,28 @@ export default class Demo extends Phaser.Scene {
       key: MONSTER_LEFT_ANIM,
       frames: this.anims.generateFrameNumbers(SPRITESHEET, { start: 15, end: 17 }),
       frameRate: 10,
-      repeat: -1
+      repeat: -1,
     });
 
     this.anims.create({
       key: MONSTER_RIGHT_ANIM,
       frames: this.anims.generateFrameNumbers(SPRITESHEET, { start: 27, end: 29 }),
       frameRate: 10,
-      repeat: -1
+      repeat: -1,
     });
 
     this.anims.create({
       key: MONSTER_UP_ANIM,
       frames: this.anims.generateFrameNumbers(SPRITESHEET, { start: 39, end: 41 }),
       frameRate: 10,
-      repeat: -1
+      repeat: -1,
     });
 
     this.anims.create({
       key: MONSTER_DOWN_ANIM,
       frames: this.anims.generateFrameNumbers(SPRITESHEET, { start: 2, end: 5 }),
       frameRate: 10,
-      repeat: -1
+      repeat: -1,
     });
   }
 }

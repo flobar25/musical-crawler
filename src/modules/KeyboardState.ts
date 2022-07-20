@@ -1,7 +1,6 @@
-import { Scene } from "phaser";
+import { Scene } from 'phaser';
 
-export default class KeyboardState
- {
+export default class KeyboardState {
   // keyboard state
   times: Map<String, number>;
   keys: Map<String, Phaser.Input.Keyboard.Key>;
@@ -19,9 +18,7 @@ export default class KeyboardState
     this.scene = scene;
   }
 
-  preload() {
-
-  }
+  preload() {}
 
   create() {
     this.keys.set('q', this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q));
@@ -33,9 +30,9 @@ export default class KeyboardState
     this.times.forEach((v, k) => {
       if (v === -1 && this.keys.get(k)?.isDown) {
         this.times.set(k, time);
-      } else if (this.keys.get(k)?.isUp){
+      } else if (this.keys.get(k)?.isUp) {
         this.times.set(k, -1);
       }
     });
   }
-} 
+}
