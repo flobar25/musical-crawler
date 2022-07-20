@@ -23,7 +23,7 @@ const MONSTER_VELOCITY = 80;
 
 export default class Demo extends Phaser.Scene {
   keyboard!: KeyboardState;
-  weapons!: Map<String, Weapon>;
+  weapons!: Map<string, Weapon>;
 
   player!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
   monster!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
@@ -34,7 +34,7 @@ export default class Demo extends Phaser.Scene {
 
   quarterNoteDuration!: number;
   frameDuration!: number;
-  musicStartTime: number = -1;
+  musicStartTime = -1;
   drums!: Phaser.Sound.BaseSound;
   synth1!: Phaser.Sound.BaseSound;
   halfNoteDuration!: number;
@@ -108,30 +108,6 @@ export default class Demo extends Phaser.Scene {
 
     this.drums.play('', { loop: true });
     this.musicStartTime = time;
-  }
-
-  private handlePlayerAttacks(time: number) {
-    // console.log(this.qTime);
-    let relativeTime = time - this.musicStartTime;
-
-    if (this.keyboard.qTime !== -1) {
-      let relativeQTime = this.keyboard.qTime - this.musicStartTime;
-      let lagTime = relativeQTime % this.quarterNoteDuration;
-      let lagTick = Math.floor(lagTime / (this.quarterNoteDuration / this.musicResolution));
-      let delay = lagTick * (this.quarterNoteDuration / this.musicResolution);
-      // let delay = ((relativeQTime % this.quarterNoteDuration) / (this.musicResolution*this.quarterNoteDuration)) * (this.quarterNoteDuration * this.musicResolution);
-      console.log(delay);
-
-      if ((relativeTime - delay) % (this.quarterNoteDuration / 2) <= this.frameDuration) {
-        this.synth1.play();
-      }
-    }
-
-    if (this.keyboard.wTime !== -1) {
-      if ((time - this.musicStartTime) % this.halfNoteDuration <= this.frameDuration) {
-        this.synth2.play();
-      }
-    }
   }
 
   private handlePlayerMoves() {
