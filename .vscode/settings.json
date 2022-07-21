@@ -1,5 +1,5 @@
 {
-  "prettier.printWidth": 150,
+  "prettier.printWidth": 120,
   "prettier.requireConfig": false,
   "prettier.singleQuote": true,
   "editor.formatOnSave": true,
