@@ -31,13 +31,13 @@ export default class Weapon {
   }
 
   handleUpdate(time: number, delta: number): boolean {
-    let relativeTime = time - this.musicStartTime;
+    const relativeTime = time - this.musicStartTime;
 
     if (this.activationTime != -1) {
-      let relativeQTime = this.activationTime - this.musicStartTime;
-      let lagTime = relativeQTime % this.quarterNoteDuration;
-      let lagTick = Math.floor(lagTime / (this.quarterNoteDuration / this.musicResolution));
-      let delay = lagTick * (this.quarterNoteDuration / this.musicResolution);
+      const relativeQTime = this.activationTime - this.musicStartTime;
+      const lagTime = relativeQTime % this.quarterNoteDuration;
+      const lagTick = Math.floor(lagTime / (this.quarterNoteDuration / this.musicResolution));
+      const delay = lagTick * (this.quarterNoteDuration / this.musicResolution);
       // let delay = ((relativeQTime % this.quarterNoteDuration) / (this.musicResolution*this.quarterNoteDuration)) * (this.quarterNoteDuration * this.musicResolution);
       console.log(delay);
 

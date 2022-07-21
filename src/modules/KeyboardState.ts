@@ -2,8 +2,8 @@ import { Scene } from 'phaser';
 
 export default class KeyboardState {
   // keyboard state
-  times: Map<String, number>;
-  keys: Map<String, Phaser.Input.Keyboard.Key>;
+  times: Map<string, number>;
+  keys: Map<string, Phaser.Input.Keyboard.Key>;
   qKey!: Phaser.Input.Keyboard.Key;
   wKey!: Phaser.Input.Keyboard.Key;
   eKey!: Phaser.Input.Keyboard.Key;
