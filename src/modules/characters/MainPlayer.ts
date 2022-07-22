@@ -4,7 +4,7 @@ import Character from './Character';
 
 export default class MainPlayer extends Character {
   // constants
-  static SPRITESHEET_KEY = 'SPRITESHEET_KEY';
+  static SPRITESHEET_KEY = 'PLAYER_SPRITESHEET_KEY';
   static PLAYER_LEFT_ANIM_KEY = 'PLAYER_LEFT_ANIM';
   static PLAYER_RIGHT_ANIM_KEY = 'PLAYER_RIGHT_ANIM';
   static PLAYER_DOWN_ANIM_KEY = 'PLAYER_DOWN_ANIM';
@@ -41,7 +41,11 @@ export default class MainPlayer extends Character {
     this.keys.set('q', GameState.getInstance().scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q));
     this.keys.set('w', GameState.getInstance().scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W));
     this.keys.set('e', GameState.getInstance().scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E));
-    this.sprite = GameState.getInstance().scene.physics.add.sprite(100, 450, MainPlayer.SPRITESHEET_KEY);
+    this.sprite = GameState.getInstance().scene.physics.add.sprite(
+      this.initPosition.x,
+      this.initPosition.y,
+      MainPlayer.SPRITESHEET_KEY
+    );
     this.createPlayerAnims();
   }
 

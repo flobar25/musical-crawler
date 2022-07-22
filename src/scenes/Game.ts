@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import MainPlayer from '../modules/characters/MainPlayer';
+import Monster from '../modules/characters/Monster';
 import GameState from '../modules/state/GameState';
 
 const SPRITESHEET = 'spritesheet';
@@ -16,9 +17,10 @@ const MONSTER_VELOCITY = 80;
 
 export default class Demo extends Phaser.Scene {
   player: MainPlayer;
+  monster: Monster;
 
   // player!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
-  monster!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
+  // monster!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
   // cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
   // attackRate!: number;
   // synth!: Tone.Synth;
@@ -33,19 +35,22 @@ export default class Demo extends Phaser.Scene {
 
   constructor() {
     super('GameScene');
-    this.player = new MainPlayer(160);
+    this.player = new MainPlayer(160, { x: 100, y: 450 });
+
+    this.monster = new Monster(70, { x: 200, y: 500 });
   }
 
   preload() {
     GameState.getInstance().initState(109, this);
     this.player.handlePreload();
-
+    this.monster.handlePreload();
     this.load.spritesheet(SPRITESHEET, 'assets/personajes-lanto.png', { frameWidth: 32, frameHeight: 32 });
     this.load.audio(DRUMS, 'assets/music/OLIVER_hat_drum_loop_ride_clap_109.wav');
   }
 
   create() {
     this.player.handleCreate();
+    this.monster.handleCreate(this.player.sprite);
 
     // sound
     this.drums = this.sound.add(DRUMS);
@@ -68,7 +73,7 @@ export default class Demo extends Phaser.Scene {
   update(time: number, delta: number): void {
     this.handleMusic(time);
     this.player.handleUpdate(time, delta);
-    // this.handleMonsterMoves(this.monster);
+    this.monster.handleUpdate(time, delta);
   }
 
   private handleMusic(time: number) {
