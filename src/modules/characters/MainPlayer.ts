@@ -1,4 +1,4 @@
-import GameState from '../state/GameState';
+import { getScene } from '../state/GameState';
 import Weapon from '../weapons/Weapon';
 import Character from './Character';
 
@@ -20,32 +20,28 @@ export default class MainPlayer extends Character {
   sprite!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
 
   handlePreload() {
-    GameState.getInstance().scene.load.spritesheet(MainPlayer.SPRITESHEET_KEY, 'assets/personajes-lanto.png', {
+    getScene().load.spritesheet(MainPlayer.SPRITESHEET_KEY, 'assets/personajes-lanto.png', {
       frameWidth: 32,
       frameHeight: 32,
     });
 
     this.weapons = new Map();
-    this.weapons.set('q', new Weapon('assets/music/beep1.wav', 'qsound', 2));
+    this.weapons.set('q', new Weapon('assets/music/beep1.wav', 'qsound', 3));
     this.weapons.set('w', new Weapon('assets/music/wah.wav', 'wsound', 1));
-    this.weapons.forEach((w) => GameState.getInstance().scene.load.audio(w.key, w.soundFile));
+    this.weapons.forEach((w) => getScene().load.audio(w.key, w.soundFile));
   }
 
   handleCreate() {
-    this.cursors = GameState.getInstance().scene.input.keyboard.createCursorKeys();
+    this.cursors = getScene().input.keyboard.createCursorKeys();
     this.times = new Map();
     this.times.set('q', -1);
     this.times.set('w', -1);
     this.times.set('e', -1);
     this.keys = new Map();
-    this.keys.set('q', GameState.getInstance().scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q));
-    this.keys.set('w', GameState.getInstance().scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W));
-    this.keys.set('e', GameState.getInstance().scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E));
-    this.sprite = GameState.getInstance().scene.physics.add.sprite(
-      this.initPosition.x,
-      this.initPosition.y,
-      MainPlayer.SPRITESHEET_KEY
-    );
+    this.keys.set('q', getScene().input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q));
+    this.keys.set('w', getScene().input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W));
+    this.keys.set('e', getScene().input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E));
+    this.sprite = getScene().physics.add.sprite(this.initPosition.x, this.initPosition.y, MainPlayer.SPRITESHEET_KEY);
     this.createPlayerAnims();
   }
 
@@ -100,15 +96,15 @@ export default class MainPlayer extends Character {
     this.weapons.forEach((w, k) => {
       w.activate(this.times.get(k));
       if (w.handleUpdate(time, delta)) {
-        GameState.getInstance().scene.sound.play(w.key);
+        getScene().sound.play(w.key);
       }
     });
   }
 
   private createPlayerAnims() {
-    GameState.getInstance().scene.anims.create({
+    getScene().anims.create({
       key: MainPlayer.PLAYER_LEFT_ANIM_KEY,
-      frames: GameState.getInstance().scene.anims.generateFrameNumbers(MainPlayer.SPRITESHEET_KEY, {
+      frames: getScene().anims.generateFrameNumbers(MainPlayer.SPRITESHEET_KEY, {
         start: 12,
         end: 14,
       }),
@@ -116,9 +112,9 @@ export default class MainPlayer extends Character {
       repeat: -1,
     });
 
-    GameState.getInstance().scene.anims.create({
+    getScene().anims.create({
       key: MainPlayer.PLAYER_RIGHT_ANIM_KEY,
-      frames: GameState.getInstance().scene.anims.generateFrameNumbers(MainPlayer.SPRITESHEET_KEY, {
+      frames: getScene().anims.generateFrameNumbers(MainPlayer.SPRITESHEET_KEY, {
         start: 24,
         end: 26,
       }),
@@ -126,9 +122,9 @@ export default class MainPlayer extends Character {
       repeat: -1,
     });
 
-    GameState.getInstance().scene.anims.create({
+    getScene().anims.create({
       key: MainPlayer.PLAYER_UP_ANIM_KEY,
-      frames: GameState.getInstance().scene.anims.generateFrameNumbers(MainPlayer.SPRITESHEET_KEY, {
+      frames: getScene().anims.generateFrameNumbers(MainPlayer.SPRITESHEET_KEY, {
         start: 36,
         end: 38,
       }),
@@ -136,9 +132,9 @@ export default class MainPlayer extends Character {
       repeat: -1,
     });
 
-    GameState.getInstance().scene.anims.create({
+    getScene().anims.create({
       key: MainPlayer.PLAYER_DOWN_ANIM_KEY,
-      frames: GameState.getInstance().scene.anims.generateFrameNumbers(MainPlayer.SPRITESHEET_KEY, {
+      frames: getScene().anims.generateFrameNumbers(MainPlayer.SPRITESHEET_KEY, {
         start: 0,
         end: 2,
       }),

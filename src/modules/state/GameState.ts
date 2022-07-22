@@ -1,5 +1,13 @@
 import { Scene } from 'phaser';
 
+export function gameState() {
+  return GameState.getInstance();
+}
+
+export function getScene() {
+  return GameState.getInstance().scene;
+}
+
 export default class GameState {
   private static instance = new GameState();
 

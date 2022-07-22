@@ -1,4 +1,4 @@
-import GameState from '../state/GameState';
+import { getScene } from '../state/GameState';
 import Character from './Character';
 
 export default class Monster extends Character {
@@ -14,18 +14,14 @@ export default class Monster extends Character {
   targetSprite!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
 
   handlePreload() {
-    GameState.getInstance().scene.load.spritesheet(Monster.SPRITESHEET_KEY, 'assets/personajes-lanto.png', {
+    getScene().load.spritesheet(Monster.SPRITESHEET_KEY, 'assets/personajes-lanto.png', {
       frameWidth: 32,
       frameHeight: 32,
     });
   }
 
   handleCreate(targetSprite: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody) {
-    this.sprite = GameState.getInstance().scene.physics.add.sprite(
-      this.initPosition.x,
-      this.initPosition.y,
-      Monster.SPRITESHEET_KEY
-    );
+    this.sprite = getScene().physics.add.sprite(this.initPosition.x, this.initPosition.y, Monster.SPRITESHEET_KEY);
     this.createMonsterAnims();
     this.targetSprite = targetSprite;
   }
@@ -71,7 +67,7 @@ export default class Monster extends Character {
   }
 
   private createMonsterAnims() {
-    const scene = GameState.getInstance().scene;
+    const scene = getScene();
     scene.anims.create({
       key: Monster.MONSTER_LEFT_ANIM_KEY,
       frames: scene.anims.generateFrameNumbers(Monster.SPRITESHEET_KEY, { start: 15, end: 17 }),

@@ -1,5 +1,3 @@
-import { Scene } from 'phaser';
-
 export default class Character {
   velocity: number;
   initPosition: { x: number; y: number };
