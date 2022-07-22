@@ -1,22 +1,27 @@
 import { Scene } from 'phaser';
 
 export default class GameState {
+  private static instance = new GameState();
+
   bpm = -1;
+  fps = -1;
   quarterNoteDuration = -1;
   halfNoteDuration = -1;
   musicStartTime = -1;
   frameDuration = -1;
-  private static instance = new GameState();
+  scene!: Scene;
 
-  static getInstance() {
+  static getInstance(): GameState {
     return this.instance;
   }
 
-  initBpm(bpm: number, scene: Scene) {
+  initState(bpm: number, scene: Scene) {
     this.bpm = bpm;
+    this.scene = scene;
+    this.fps = scene.physics.world.fps;
     this.quarterNoteDuration = 60000 / this.bpm;
     this.halfNoteDuration = this.quarterNoteDuration * 2;
-    this.frameDuration = 1000 / scene.physics.world.fps;
+    this.frameDuration = 1000 / this.fps;
   }
 
   private constructor() {

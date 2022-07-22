@@ -1,8 +1,6 @@
 import Phaser from 'phaser';
-import * as Tone from 'tone';
 import MainPlayer from '../modules/characters/MainPlayer';
 import GameState from '../modules/state/GameState';
-import Weapon from '../modules/weapons/Weapon';
 
 const SPRITESHEET = 'spritesheet';
 const DRUMS = 'drums';
@@ -18,8 +16,6 @@ const MONSTER_VELOCITY = 80;
 
 export default class Demo extends Phaser.Scene {
   player: MainPlayer;
-
-  weapons!: Map<string, Weapon>;
 
   // player!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
   monster!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
@@ -37,25 +33,19 @@ export default class Demo extends Phaser.Scene {
 
   constructor() {
     super('GameScene');
-    this.player = new MainPlayer(this, 160);
+    this.player = new MainPlayer(160);
   }
 
   preload() {
-    GameState.getInstance().initBpm(109, this);
+    GameState.getInstance().initState(109, this);
     this.player.handlePreload();
 
     this.load.spritesheet(SPRITESHEET, 'assets/personajes-lanto.png', { frameWidth: 32, frameHeight: 32 });
     this.load.audio(DRUMS, 'assets/music/OLIVER_hat_drum_loop_ride_clap_109.wav');
-
-    this.weapons = new Map();
-    this.weapons.set('q', new Weapon(this, 'assets/music/beep1.wav', SYNTH1, 109, this.physics.world.fps, 2));
-    this.weapons.set('w', new Weapon(this, 'assets/music/wah.wav', SYNTH2, 109, this.physics.world.fps, 1));
-    this.weapons.forEach((w) => this.load.audio(w.key, w.soundFile));
   }
 
   create() {
     this.player.handleCreate();
-    this.weapons.forEach((w) => this.sound.add(w.key));
 
     // sound
     this.drums = this.sound.add(DRUMS);
@@ -76,16 +66,6 @@ export default class Demo extends Phaser.Scene {
   }
 
   update(time: number, delta: number): void {
-    // this.weapons.forEach((v, k) => {
-    //   v.activate(this.keyboard.times.get(k), this.musicStartTime);
-    // });
-
-    this.weapons.forEach((w) => {
-      if (w.handleUpdate(time, delta)) {
-        this.sound.play(w.key);
-      }
-    });
-
     this.handleMusic(time);
     this.player.handleUpdate(time, delta);
     // this.handleMonsterMoves(this.monster);
