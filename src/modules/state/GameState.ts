@@ -1,4 +1,7 @@
 import { Scene } from 'phaser';
+import MainPlayer from '../characters/MainPlayer';
+import Monster from '../characters/Monster';
+import Music from '../music/Music';
 
 export function gameState() {
   return GameState.getInstance();
@@ -19,6 +22,12 @@ export default class GameState {
   frameDuration = -1;
   scene!: Scene;
 
+  player!: MainPlayer;
+  monsters!: Monster[];
+  music!: Music;
+
+  graphics!: Phaser.GameObjects.Graphics;
+
   static getInstance(): GameState {
     return this.instance;
   }
@@ -30,6 +39,8 @@ export default class GameState {
     this.quarterNoteDuration = 60000 / this.bpm;
     this.halfNoteDuration = this.quarterNoteDuration * 2;
     this.frameDuration = 1000 / this.fps;
+    this.graphics = scene.add.graphics();
+    this.graphics.lineStyle(128, 0x00ff00, 1);
   }
 
   private constructor() {
