@@ -2,6 +2,7 @@ import { Scene } from 'phaser';
 import MainPlayer from '../characters/MainPlayer';
 import Monster from '../characters/Monster';
 import Music from '../music/Music';
+import TextGenerator from '../text/TextGenerator';
 
 export function gameState() {
   return GameState.getInstance();
@@ -25,6 +26,7 @@ export default class GameState {
   player!: MainPlayer;
   monsters!: Monster[];
   music!: Music;
+  textGenerator!: TextGenerator;
 
   graphics!: Phaser.GameObjects.Graphics;
 

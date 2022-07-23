@@ -66,6 +66,8 @@ export default class Monster extends Character {
     this.sprite.setVelocityY(velocityY);
   }
 
+  damageReceived(damage: number) {}
+
   private createMonsterAnims() {
     const scene = getScene();
     scene.anims.create({

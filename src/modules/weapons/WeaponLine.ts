@@ -1,7 +1,7 @@
 import Monster from '../characters/Monster';
 import { gameState, getScene } from '../state/GameState';
 
-export default class Weapon {
+export default class WeaponLine {
   key: string;
   soundFile: string;
   activationTime: number;
@@ -9,15 +9,17 @@ export default class Weapon {
   count: number;
   lines: Phaser.GameObjects.Line[];
   targetedEnnemies: Monster[];
+  damage: number;
 
-  constructor(soundFile: string, key: string, resolution: number) {
+  constructor(soundFile: string, key: string, resolution: number, damage: number) {
     this.key = key;
     this.soundFile = soundFile;
     this.activationTime = -1;
     this.musicResolution = resolution;
-    this.count = 1;
+    this.count = 2;
     this.lines = [];
     this.targetedEnnemies = [];
+    this.damage = damage;
   }
 
   activate(time?: number) {
@@ -28,7 +30,13 @@ export default class Weapon {
 
   handleUpdate(time: number, delta: number): boolean {
     this.handleLines();
-    return this.handleAttack(time, delta);
+    const attacked = this.handleAttack(time, delta);
+    if (attacked) {
+      this.targetedEnnemies.forEach((m) => {
+        gameState().textGenerator.enemyDamage(time, this.damage, m);
+      });
+    }
+    return attacked;
   }
 
   handleLines() {
@@ -78,7 +86,6 @@ export default class Weapon {
     });
 
     const result = sortedMonsters.slice(0, count);
-    console.log(result);
     return result;
   }
 }
