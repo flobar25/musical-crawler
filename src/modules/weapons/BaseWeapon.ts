@@ -1,4 +1,5 @@
-import { gameState } from '../state/GameState';
+import Monster from '../characters/Monster';
+import { gameState, getActiveMonsters } from '../state/GameState';
 
 export default abstract class BaseWeapon {
   key: string;
@@ -44,5 +45,13 @@ export default abstract class BaseWeapon {
     }
 
     return false;
+  }
+
+  dealDamage(time: number, damage: number, monster: Monster) {
+    gameState().textGenerator.enemyDamage(time, this.damage, monster);
+    monster.life -= damage;
+    if (monster.life <= 0) {
+      monster.sprite.alpha = 0;
+    }
   }
 }

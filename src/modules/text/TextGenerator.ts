@@ -35,11 +35,12 @@ export default class TextGenerator {
 
   enemyDamage(time: number, damage: number, monster: Monster) {
     const damageToReplace = this.damages.reduce((a, b) => (a.time < b.time ? a : b));
-
     damageToReplace.time = time;
     damageToReplace.txt.x = monster.sprite.x - 10;
     damageToReplace.txt.y = monster.sprite.y - 50;
     damageToReplace.txt.text = damage.toString();
     damageToReplace.txt.alpha = 1;
   }
+
+  //   playerHealh() {}
 }

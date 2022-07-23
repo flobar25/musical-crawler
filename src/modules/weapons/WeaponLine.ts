@@ -1,5 +1,5 @@
 import Monster from '../characters/Monster';
-import { gameState, getScene } from '../state/GameState';
+import { gameState, getActiveMonsters, getScene } from '../state/GameState';
 import BaseWeapon from './BaseWeapon';
 
 export default class WeaponLine extends BaseWeapon {
@@ -19,7 +19,7 @@ export default class WeaponLine extends BaseWeapon {
     const attacked = this.handleAttack(time, delta);
     if (attacked) {
       this.targetedEnnemies.forEach((m) => {
-        gameState().textGenerator.enemyDamage(time, this.damage, m);
+        this.dealDamage(time, this.damage, m);
       });
     }
     return attacked;
@@ -27,17 +27,22 @@ export default class WeaponLine extends BaseWeapon {
 
   handleLines() {
     this.targetedEnnemies = this.getClosestMonsters(this.count);
+    if (this.targetedEnnemies.length == 0) {
+      this.lines.forEach((l) => (l.alpha = 0));
+    }
     // TODO we could avoid doing that on each frame (once every 10 frames or so?)
     this.targetedEnnemies.forEach((m, idx) => {
       if (this.lines.length < idx + 1) {
         this.lines.push(getScene().add.line(0, 0, 0, 0, 100, 100, 0xffffff, 0.5).setOrigin(0));
       }
-      this.lines[idx].setTo(gameState().player.sprite.x, gameState().player.sprite.y, m.sprite.x, m.sprite.y);
+      const line = this.lines[idx];
+      line.setTo(gameState().player.sprite.x, gameState().player.sprite.y, m.sprite.x, m.sprite.y);
+      line.alpha = 0.5;
     });
   }
 
   getClosestMonsters(count: number) {
-    const sortedMonsters = gameState().monsters.sort((a, b) => {
+    const sortedMonsters = getActiveMonsters().sort((a, b) => {
       return (
         Math.sqrt(
           (gameState().player.sprite.x - a.sprite.x) * (gameState().player.sprite.x - a.sprite.x) +

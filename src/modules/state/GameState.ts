@@ -16,8 +16,8 @@ export function getPlayer() {
   return GameState.getInstance().player;
 }
 
-export function getMonsters() {
-  return GameState.getInstance().monsters;
+export function getActiveMonsters() {
+  return GameState.getInstance().monsters.filter((m) => m.life > 0);
 }
 
 export default class GameState {

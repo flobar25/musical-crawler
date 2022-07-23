@@ -1,4 +1,4 @@
-import { gameState, getMonsters, getPlayer, getScene } from '../state/GameState';
+import { gameState, getActiveMonsters, getPlayer, getScene } from '../state/GameState';
 import BaseWeapon from './BaseWeapon';
 
 export default class WeaponCircle extends BaseWeapon {
@@ -16,7 +16,7 @@ export default class WeaponCircle extends BaseWeapon {
     const attacked = this.handleAttack(time, delta);
     if (attacked) {
       this.getTargetedMonsters().forEach((m) => {
-        gameState().textGenerator.enemyDamage(time, this.damage, m);
+        this.dealDamage(time, this.damage, m);
       });
     }
     return attacked;
@@ -28,7 +28,7 @@ export default class WeaponCircle extends BaseWeapon {
   }
 
   getTargetedMonsters() {
-    return getMonsters().filter((m) => {
+    return getActiveMonsters().filter((m) => {
       return (
         (m.sprite.x - this.circle.x - this.size) * (m.sprite.x - this.circle.x - this.size) +
           (m.sprite.y - this.circle.y - this.size) * (m.sprite.y - this.circle.y - this.size) <
