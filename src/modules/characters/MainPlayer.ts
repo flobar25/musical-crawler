@@ -20,7 +20,12 @@ export default class MainPlayer extends Character {
   sprite!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
 
   handlePreload() {
-    getScene().load.spritesheet(MainPlayer.SPRITESHEET_KEY, 'assets/personajes-lanto.png', {
+    // getScene().load.spritesheet(MainPlayer.SPRITESHEET_KEY, 'assets/personajes-lanto.png', {
+    //   frameWidth: 32,
+    //   frameHeight: 32,
+    // });
+
+    getScene().load.spritesheet(MainPlayer.SPRITESHEET_KEY, 'assets/hld.png', {
       frameWidth: 32,
       frameHeight: 32,
     });
@@ -42,6 +47,7 @@ export default class MainPlayer extends Character {
     this.keys.set('w', getScene().input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W));
     this.keys.set('e', getScene().input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E));
     this.sprite = getScene().physics.add.sprite(this.initPosition.x, this.initPosition.y, MainPlayer.SPRITESHEET_KEY);
+    this.sprite.scale = 2;
     this.createPlayerAnims();
   }
 
@@ -105,40 +111,40 @@ export default class MainPlayer extends Character {
     getScene().anims.create({
       key: MainPlayer.PLAYER_LEFT_ANIM_KEY,
       frames: getScene().anims.generateFrameNumbers(MainPlayer.SPRITESHEET_KEY, {
-        start: 12,
-        end: 14,
+        start: 24,
+        end: 35,
       }),
-      frameRate: 10,
+      frameRate: 15,
       repeat: -1,
     });
 
     getScene().anims.create({
       key: MainPlayer.PLAYER_RIGHT_ANIM_KEY,
       frames: getScene().anims.generateFrameNumbers(MainPlayer.SPRITESHEET_KEY, {
-        start: 24,
-        end: 26,
+        start: 36,
+        end: 47,
       }),
-      frameRate: 10,
+      frameRate: 15,
       repeat: -1,
     });
 
     getScene().anims.create({
       key: MainPlayer.PLAYER_UP_ANIM_KEY,
       frames: getScene().anims.generateFrameNumbers(MainPlayer.SPRITESHEET_KEY, {
-        start: 36,
-        end: 38,
+        start: 0,
+        end: 11,
       }),
-      frameRate: 10,
+      frameRate: 15,
       repeat: -1,
     });
 
     getScene().anims.create({
       key: MainPlayer.PLAYER_DOWN_ANIM_KEY,
       frames: getScene().anims.generateFrameNumbers(MainPlayer.SPRITESHEET_KEY, {
-        start: 0,
-        end: 2,
+        start: 12,
+        end: 23,
       }),
-      frameRate: 10,
+      frameRate: 15,
       repeat: -1,
     });
   }

@@ -1,3 +1,4 @@
+import Monster from '../characters/Monster';
 import { gameState, getScene } from '../state/GameState';
 
 export default class Weapon {
@@ -7,6 +8,7 @@ export default class Weapon {
   musicResolution: number;
   count: number;
   lines: Phaser.GameObjects.Line[];
+  targetedEnnemies: Monster[];
 
   constructor(soundFile: string, key: string, resolution: number) {
     this.key = key;
@@ -15,6 +17,7 @@ export default class Weapon {
     this.musicResolution = resolution;
     this.count = 1;
     this.lines = [];
+    this.targetedEnnemies = [];
   }
 
   activate(time?: number) {
@@ -29,14 +32,12 @@ export default class Weapon {
   }
 
   handleLines() {
+    this.targetedEnnemies = this.getClosestMonsters(this.count);
     // TODO we could avoid doing that on each frame (once every 10 frames or so?)
-    this.getClosestMonsters(this.count).forEach((m, idx) => {
-      console.log(m.velocity);
-      // this.lines[idx].setPosition(gameState().player.sprite.x, gameState().player.sprite.y, m.sprite.x, m.sprite.y);
+    this.targetedEnnemies.forEach((m, idx) => {
       if (this.lines.length < idx + 1) {
         this.lines.push(getScene().add.line(0, 0, 0, 0, 100, 100, 0xffffff).setOrigin(0));
       }
-
       this.lines[idx].setTo(gameState().player.sprite.x, gameState().player.sprite.y, m.sprite.x, m.sprite.y);
     });
   }
