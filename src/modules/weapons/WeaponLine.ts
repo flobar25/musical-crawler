@@ -1,31 +1,17 @@
 import Monster from '../characters/Monster';
 import { gameState, getScene } from '../state/GameState';
+import BaseWeapon from './BaseWeapon';
 
-export default class WeaponLine {
-  key: string;
-  soundFile: string;
-  activationTime: number;
-  musicResolution: number;
-  count: number;
+export default class WeaponLine extends BaseWeapon {
   lines: Phaser.GameObjects.Line[];
   targetedEnnemies: Monster[];
-  damage: number;
+  count: number;
 
-  constructor(soundFile: string, key: string, resolution: number, damage: number) {
-    this.key = key;
-    this.soundFile = soundFile;
-    this.activationTime = -1;
-    this.musicResolution = resolution;
+  constructor(soundFile: string, key: string, resolution: number, damage: number, cost: number) {
+    super(soundFile, key, resolution, damage, cost);
     this.count = 2;
     this.lines = [];
     this.targetedEnnemies = [];
-    this.damage = damage;
-  }
-
-  activate(time?: number) {
-    if (time && gameState().musicStartTime > 0) {
-      this.activationTime = time;
-    }
   }
 
   handleUpdate(time: number, delta: number): boolean {
@@ -44,31 +30,10 @@ export default class WeaponLine {
     // TODO we could avoid doing that on each frame (once every 10 frames or so?)
     this.targetedEnnemies.forEach((m, idx) => {
       if (this.lines.length < idx + 1) {
-        this.lines.push(getScene().add.line(0, 0, 0, 0, 100, 100, 0xffffff).setOrigin(0));
+        this.lines.push(getScene().add.line(0, 0, 0, 0, 100, 100, 0xffffff, 0.5).setOrigin(0));
       }
       this.lines[idx].setTo(gameState().player.sprite.x, gameState().player.sprite.y, m.sprite.x, m.sprite.y);
     });
-  }
-
-  handleAttack(time: number, delta: number): boolean {
-    const relativeTime = time - gameState().musicStartTime;
-    if (this.activationTime != -1) {
-      const relativeQTime = this.activationTime - gameState().musicStartTime;
-      const lagTime = relativeQTime % gameState().quarterNoteDuration;
-      const lagTick = Math.floor(lagTime / (gameState().quarterNoteDuration / this.musicResolution));
-      const delay = lagTick * (gameState().quarterNoteDuration / this.musicResolution);
-      // let delay = ((relativeQTime % this.quarterNoteDuration) / (this.musicResolution*this.quarterNoteDuration)) * (this.quarterNoteDuration * this.musicResolution);
-      // console.log(delay);
-
-      if (
-        (relativeTime - delay) % (gameState().quarterNoteDuration / this.musicResolution) <=
-        gameState().frameDuration
-      ) {
-        return true;
-      }
-    }
-
-    return false;
   }
 
   getClosestMonsters(count: number) {

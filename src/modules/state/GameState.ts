@@ -12,6 +12,14 @@ export function getScene() {
   return GameState.getInstance().scene;
 }
 
+export function getPlayer() {
+  return GameState.getInstance().player;
+}
+
+export function getMonsters() {
+  return GameState.getInstance().monsters;
+}
+
 export default class GameState {
   private static instance = new GameState();
 

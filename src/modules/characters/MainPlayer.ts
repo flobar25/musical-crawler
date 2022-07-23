@@ -1,4 +1,6 @@
 import { getScene } from '../state/GameState';
+import BaseWeapon from '../weapons/BaseWeapon';
+import WeaponCircle from '../weapons/WeaponCircle';
 import WeaponLine from '../weapons/WeaponLine';
 import Character from './Character';
 
@@ -14,7 +16,7 @@ export default class MainPlayer extends Character {
   cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
   keys!: Map<string, Phaser.Input.Keyboard.Key>;
   times!: Map<string, number>;
-  weapons!: Map<string, WeaponLine>;
+  weapons!: Map<string, BaseWeapon>;
 
   // sprite
   sprite!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
@@ -31,8 +33,8 @@ export default class MainPlayer extends Character {
     });
 
     this.weapons = new Map();
-    this.weapons.set('q', new WeaponLine('assets/music/beep1.wav', 'qsound', 2, 5));
-    this.weapons.set('w', new WeaponLine('assets/music/wah.wav', 'wsound', 1, 10));
+    this.weapons.set('q', new WeaponLine('assets/music/beep1.wav', 'qsound', 2, 5, 10));
+    this.weapons.set('w', new WeaponCircle('assets/music/wah.wav', 'wsound', 1, 10, 10));
     this.weapons.forEach((w) => getScene().load.audio(w.key, w.soundFile));
   }
 
