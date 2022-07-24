@@ -1,6 +1,7 @@
 import { Scene } from 'phaser';
 import MainPlayer from '../characters/MainPlayer';
 import Monster from '../characters/Monster';
+import MonsterGenerator from '../levelgenerator/MonsterGenerator';
 import Music from '../music/Music';
 import TextGenerator from '../text/TextGenerator';
 
@@ -20,6 +21,10 @@ export function getActiveMonsters() {
   return GameState.getInstance().monsters.filter((m) => m.life > 0);
 }
 
+export function getInactiveMonsters() {
+  return GameState.getInstance().monsters.filter((m) => m.life <= 0);
+}
+
 export default class GameState {
   private static instance = new GameState();
 
@@ -32,9 +37,10 @@ export default class GameState {
   scene!: Scene;
 
   player!: MainPlayer;
-  monsters!: Monster[];
+  monsters: Monster[] = [];
   music!: Music;
   textGenerator!: TextGenerator;
+  monsterGenerator!: MonsterGenerator;
 
   graphics!: Phaser.GameObjects.Graphics;
 
