@@ -1,4 +1,5 @@
 import Monster from '../characters/Monster';
+import { HEIGHT, WIDTH } from '../constants/Constants';
 import { gameState, getActiveMonsters, getInactiveMonsters, getScene } from '../state/GameState';
 
 export default class MonsterGenerator {
@@ -44,14 +45,22 @@ export default class MonsterGenerator {
       const inactiveMonster = getInactiveMonsters()[inactiveMonstersCount];
       inactiveMonster.sprite.alpha = 1;
       inactiveMonster.life = this.defaultLife;
-      inactiveMonster.sprite.x = 200;
-      inactiveMonster.sprite.y = 500;
+      const position = this.generateMonsterPosition();
+      inactiveMonster.sprite.x = position.x;
+      inactiveMonster.sprite.y = position.y;
     }
 
     while (leftToAdd > 0) {
       console.log('creating new monster');
       leftToAdd--;
-      gameState().monsters.push(new Monster(70, { x: 200, y: 500 }, this.defaultLife));
+      gameState().monsters.push(new Monster(70, this.generateMonsterPosition(), this.defaultLife));
     }
+  }
+
+  generateMonsterPosition() {
+    return {
+      x: Math.random() * WIDTH,
+      y: Math.random() * HEIGHT,
+    };
   }
 }

@@ -1,12 +1,13 @@
 import Phaser from 'phaser';
+import { HEIGHT, WIDTH } from './modules/constants/Constants';
 
 export default {
   type: Phaser.AUTO,
   parent: 'game',
   backgroundColor: '#33A5E7',
   scale: {
-    width: 960 * 2,
-    height: 640 * 2,
+    width: WIDTH,
+    height: HEIGHT,
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
