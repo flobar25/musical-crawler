@@ -1,5 +1,5 @@
 import Monster from '../characters/Monster';
-import { gameState, getActiveMonsters } from '../state/GameState';
+import { gameState, getActiveMonsters, getPlayer } from '../state/GameState';
 
 export default abstract class BaseWeapon {
   key: string;
@@ -27,6 +27,9 @@ export default abstract class BaseWeapon {
   }
 
   handleAttack(time: number, delta: number): boolean {
+    if (this.cost > getPlayer().currentMana) {
+      return false;
+    }
     const relativeTime = time - gameState().musicStartTime;
     if (this.activationTime != -1) {
       const relativeQTime = this.activationTime - gameState().musicStartTime;
@@ -40,6 +43,7 @@ export default abstract class BaseWeapon {
         (relativeTime - delay) % (gameState().quarterNoteDuration / this.musicResolution) <=
         gameState().frameDuration
       ) {
+        getPlayer().currentMana -= this.cost;
         return true;
       }
     }

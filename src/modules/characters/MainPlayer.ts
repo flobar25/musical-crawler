@@ -33,7 +33,7 @@ export default class MainPlayer extends Character {
     });
 
     this.weapons = new Map();
-    this.weapons.set('q', new WeaponLine('assets/music/beep1.wav', 'qsound', 2, 5, 10));
+    this.weapons.set('q', new WeaponLine('assets/music/beep1.wav', 'qsound', 2, 5, 1));
     this.weapons.set('w', new WeaponCircle('assets/music/wah.wav', 'wsound', 1, 10, 10));
     this.weapons.forEach((w) => getScene().load.audio(w.key, w.soundFile));
   }

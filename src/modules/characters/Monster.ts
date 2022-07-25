@@ -15,9 +15,10 @@ export default class Monster extends Character {
 
   handlePreload() {}
 
-  handleCreate(targetSprite: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody) {}
+  handleCreate() {}
 
   handleUpdate(time: number, delta: number): void {
+    super.handleUpdate(time, delta);
     if (this.sprite === undefined) {
       this.sprite = getScene().physics.add.sprite(this.initPosition.x, this.initPosition.y, Monster.SPRITESHEET_KEY);
       this.createMonsterAnims();

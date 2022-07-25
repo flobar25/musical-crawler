@@ -1,12 +1,14 @@
 import Monster from '../characters/Monster';
-import { getScene } from '../state/GameState';
+import { getPlayer, getScene } from '../state/GameState';
 
 const ENEMY_DAMAGE = 'enemyDamage';
+const PLAYER_MANA = 'playerMana';
 const DAMAGE_TXT_TTL = 1000;
 const DAMAGE_TXT_MAX_COUNT = 25;
 
 export default class TextGenerator {
   damages: { time: number; txt: Phaser.GameObjects.BitmapText }[];
+  playerMana!: Phaser.GameObjects.BitmapText;
 
   constructor() {
     this.damages = [];
@@ -18,8 +20,10 @@ export default class TextGenerator {
 
   handleCreate() {
     for (let i = 0; i < DAMAGE_TXT_MAX_COUNT; i++) {
-      this.damages.push({ time: -1, txt: getScene().add.bitmapText(0, 0, ENEMY_DAMAGE, '0') });
+      this.damages.push({ time: -1, txt: getScene().add.bitmapText(-100, -100, ENEMY_DAMAGE, '0') });
     }
+
+    this.playerMana = getScene().add.bitmapText(30, 30, ENEMY_DAMAGE, '0');
   }
 
   handleUpdate(time: number, delta: number) {
@@ -31,6 +35,7 @@ export default class TextGenerator {
         }
       }
     });
+    this.playerMana.text = getPlayer().currentMana.toString();
   }
 
   enemyDamage(time: number, damage: number, monster: Monster) {
