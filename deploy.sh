@@ -3,6 +3,9 @@
 # abort on errors
 set -e
 
+# version info
+git log -1 > ./public/assets/gitinfo.txt
+
 rm -rf dist
 
 # build
