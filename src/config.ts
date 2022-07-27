@@ -18,4 +18,7 @@ export default {
       debug: false,
     },
   },
+  render: {
+    pixelArt: true,
+  },
 };
