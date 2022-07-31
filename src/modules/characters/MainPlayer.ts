@@ -135,7 +135,6 @@ export default class MainPlayer extends Character {
       w.activate(this.times.get(k));
       if (w.handleUpdate(time, delta)) {
         getScene().sound.play(w.key);
-        this.sprite.anims.play(MainPlayer.HIT_ANIM_KEY, true);
       }
     });
   }

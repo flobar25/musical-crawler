@@ -16,9 +16,9 @@ export default class MonsterGenerator {
   }
 
   handlePreload() {
-    getScene().load.spritesheet(Monster.SPRITESHEET_KEY, 'assets/personajes-lanto.png', {
-      frameWidth: 32,
-      frameHeight: 32,
+    getScene().load.spritesheet(Monster.SPRITESHEET_KEY, 'assets/sprites/LandmineBot/LandmineBotAllSprites.png', {
+      frameWidth: 104,
+      frameHeight: 108,
     });
   }
 
@@ -45,6 +45,7 @@ export default class MonsterGenerator {
       const inactiveMonster = getInactiveMonsters()[inactiveMonstersCount];
       inactiveMonster.sprite.alpha = 1;
       inactiveMonster.life = this.defaultLife;
+      inactiveMonster.dead = false;
       const position = this.generateMonsterPosition();
       inactiveMonster.sprite.x = position.x;
       inactiveMonster.sprite.y = position.y;

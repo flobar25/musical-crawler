@@ -53,9 +53,6 @@ export default abstract class BaseWeapon {
 
   dealDamage(time: number, damage: number, monster: Monster) {
     gameState().textGenerator.enemyDamage(time, this.damage, monster);
-    monster.life -= damage;
-    if (monster.life <= 0) {
-      monster.sprite.alpha = 0;
-    }
+    monster.damageReceived(time, damage);
   }
 }

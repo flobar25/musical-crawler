@@ -9,7 +9,7 @@ export default class Demo extends Phaser.Scene {
   constructor() {
     super('GameScene');
     gameState().player = new MainPlayer(200, { x: 100, y: 450 }, 1000, 30, 1000);
-    gameState().monsterGenerator = new MonsterGenerator(1000, 1, 500, 100);
+    gameState().monsterGenerator = new MonsterGenerator(1000, 1, 500, 7);
     gameState().music = new Music();
     gameState().textGenerator = new TextGenerator();
   }
