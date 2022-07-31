@@ -1,5 +1,5 @@
-commit 94c562b106b9573610884bdccc15cbc95b8f208a
+commit f5b9e3909858749c4c96b56f87cb6aa46b8dab53
 Author: florent <fbariod@gmail.com>
-Date:   Tue Jul 26 22:29:23 2022 -0400
+Date:   Sat Jul 30 22:05:02 2022 -0400
 
-    add intro scene
+    moved mana to weapons

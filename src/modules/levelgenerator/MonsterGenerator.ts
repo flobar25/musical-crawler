@@ -37,6 +37,7 @@ export default class MonsterGenerator {
     let leftToAdd = this.monsterIncrement;
     let inactiveMonstersCount = getInactiveMonsters().length;
 
+    // TODO add delay before counting a dead monster as inactive so the death animation can finish
     while (inactiveMonstersCount > 0 && leftToAdd > 0) {
       // console.log('reusing inactive monster');
       inactiveMonstersCount--;
