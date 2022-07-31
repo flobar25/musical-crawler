@@ -5,8 +5,8 @@ export default class WeaponCircle extends BaseWeapon {
   size: number;
   circle: Phaser.GameObjects.Arc;
 
-  constructor(soundFile: string, key: string, resolution: number, damage: number, cost: number) {
-    super(soundFile, key, resolution, damage, cost);
+  constructor(soundFile: string, key: string, resolution: number, damage: number, cost: number, mana: number) {
+    super(soundFile, key, resolution, damage, cost, mana);
     this.size = 240;
     this.circle = getScene().add.circle(0, 0, this.size, 0xffffff, 0.5).setOrigin(0);
   }

@@ -2,7 +2,6 @@ import Monster from '../characters/Monster';
 import { getPlayer, getScene } from '../state/GameState';
 
 const ENEMY_DAMAGE = 'enemyDamage';
-const PLAYER_MANA = 'playerMana';
 const DAMAGE_TXT_TTL = 1000;
 const DAMAGE_TXT_MAX_COUNT = 25;
 
@@ -35,7 +34,12 @@ export default class TextGenerator {
         }
       }
     });
-    this.playerMana.text = getPlayer().currentMana.toString();
+
+    let manaTxt = '';
+    getPlayer().weapons.forEach(
+      (value, key) => (manaTxt += key + ': ' + value.currentMana + '-' + value.maxMana + '\n')
+    );
+    this.playerMana.text = manaTxt;
   }
 
   enemyDamage(time: number, damage: number, monster: Monster) {

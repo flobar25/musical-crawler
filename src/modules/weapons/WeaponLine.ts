@@ -7,8 +7,8 @@ export default class WeaponLine extends BaseWeapon {
   targetedEnnemies: Monster[];
   count: number;
 
-  constructor(soundFile: string, key: string, resolution: number, damage: number, cost: number) {
-    super(soundFile, key, resolution, damage, cost);
+  constructor(soundFile: string, key: string, resolution: number, damage: number, cost: number, mana: number) {
+    super(soundFile, key, resolution, damage, cost, mana);
     this.count = 2;
     this.lines = [];
     this.targetedEnnemies = [];
@@ -23,6 +23,14 @@ export default class WeaponLine extends BaseWeapon {
       });
     }
     return attacked;
+  }
+
+  handleAttack(time: number, delta: number): boolean {
+    if (this.targetedEnnemies.length == 0) {
+      return false;
+    }
+
+    return super.handleAttack(time, delta);
   }
 
   handleLines() {

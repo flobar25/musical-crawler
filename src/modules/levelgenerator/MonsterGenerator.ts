@@ -32,7 +32,6 @@ export default class MonsterGenerator {
     if (getActiveMonsters().length >= this.maxMonster) {
       return;
     }
-
     // console.log('adding monsters');
 
     let leftToAdd = this.monsterIncrement;
@@ -45,7 +44,6 @@ export default class MonsterGenerator {
       const inactiveMonster = getInactiveMonsters()[inactiveMonstersCount];
       inactiveMonster.sprite.alpha = 1;
       inactiveMonster.life = this.defaultLife;
-      inactiveMonster.dead = false;
       const position = this.generateMonsterPosition();
       inactiveMonster.sprite.x = position.x;
       inactiveMonster.sprite.y = position.y;

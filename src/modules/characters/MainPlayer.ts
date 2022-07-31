@@ -1,4 +1,4 @@
-import { getScene } from '../state/GameState';
+import { gameState, getScene } from '../state/GameState';
 import BaseWeapon from '../weapons/BaseWeapon';
 import WeaponCircle from '../weapons/WeaponCircle';
 import WeaponLine from '../weapons/WeaponLine';
@@ -59,8 +59,8 @@ export default class MainPlayer extends Character {
     });
 
     this.weapons = new Map();
-    this.weapons.set('q', new WeaponLine('assets/music/beep1.wav', 'qsound', 2, 5, 1));
-    this.weapons.set('w', new WeaponCircle('assets/music/wah.wav', 'wsound', 1, 10, 10));
+    this.weapons.set('q', new WeaponLine('assets/music/beep1.wav', 'qsound', 2, 5, 1, 50));
+    this.weapons.set('w', new WeaponCircle('assets/music/wah.wav', 'wsound', 1, 10, 10, 10));
     this.weapons.forEach((w) => getScene().load.audio(w.key, w.soundFile));
   }
 
@@ -86,6 +86,20 @@ export default class MainPlayer extends Character {
     this.handlePlayerMove();
     this.handleKeys(time);
     this.handleWeapons(time, delta);
+    this.handleWeaponMana(time, delta);
+  }
+
+  handleWeaponMana(time: number, delta: number) {
+    if (time % this.manaRecoverRate > gameState().frameDuration) {
+      return;
+    }
+
+    this.weapons.forEach((w) => {
+      if (w.currentMana >= w.maxMana) {
+        return;
+      }
+      w.currentMana++;
+    });
   }
 
   handlePlayerMove(): void {

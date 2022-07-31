@@ -1,5 +1,5 @@
 import Monster from '../characters/Monster';
-import { gameState, getActiveMonsters, getPlayer } from '../state/GameState';
+import { gameState, getPlayer } from '../state/GameState';
 
 export default abstract class BaseWeapon {
   key: string;
@@ -8,14 +8,18 @@ export default abstract class BaseWeapon {
   musicResolution: number;
   damage: number;
   cost: number;
+  currentMana: number;
+  maxMana: number;
 
-  constructor(soundFile: string, key: string, resolution: number, damage: number, cost: number) {
+  constructor(soundFile: string, key: string, resolution: number, damage: number, cost: number, mana: number) {
     this.key = key;
     this.soundFile = soundFile;
     this.activationTime = -1;
     this.musicResolution = resolution;
     this.damage = damage;
     this.cost = cost;
+    this.currentMana = mana;
+    this.maxMana = mana;
   }
 
   abstract handleUpdate(time: number, delta: number): boolean;
@@ -27,9 +31,10 @@ export default abstract class BaseWeapon {
   }
 
   handleAttack(time: number, delta: number): boolean {
-    if (this.cost > getPlayer().currentMana) {
+    if (this.cost > this.currentMana) {
       return false;
     }
+
     const relativeTime = time - gameState().musicStartTime;
     if (this.activationTime != -1) {
       const relativeQTime = this.activationTime - gameState().musicStartTime;
@@ -43,7 +48,7 @@ export default abstract class BaseWeapon {
         (relativeTime - delay) % (gameState().quarterNoteDuration / this.musicResolution) <=
         gameState().frameDuration
       ) {
-        getPlayer().currentMana -= this.cost;
+        this.currentMana -= this.cost;
         return true;
       }
     }
