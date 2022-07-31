@@ -33,13 +33,13 @@ export default class MonsterGenerator {
       return;
     }
 
-    console.log('adding monsters');
+    // console.log('adding monsters');
 
     let leftToAdd = this.monsterIncrement;
     let inactiveMonstersCount = getInactiveMonsters().length;
 
     while (inactiveMonstersCount > 0 && leftToAdd > 0) {
-      console.log('reusing inactive monster');
+      // console.log('reusing inactive monster');
       inactiveMonstersCount--;
       leftToAdd--;
       const inactiveMonster = getInactiveMonsters()[inactiveMonstersCount];
@@ -51,7 +51,7 @@ export default class MonsterGenerator {
     }
 
     while (leftToAdd > 0) {
-      console.log('creating new monster');
+      // console.log('creating new monster');
       leftToAdd--;
       gameState().monsters.push(new Monster(70, this.generateMonsterPosition(), this.defaultLife));
     }

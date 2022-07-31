@@ -6,11 +6,13 @@ import Character from './Character';
 
 export default class MainPlayer extends Character {
   // constants
-  static SPRITESHEET_KEY = 'PLAYER_SPRITESHEET_KEY';
-  static PLAYER_LEFT_ANIM_KEY = 'PLAYER_LEFT_ANIM';
-  static PLAYER_RIGHT_ANIM_KEY = 'PLAYER_RIGHT_ANIM';
-  static PLAYER_DOWN_ANIM_KEY = 'PLAYER_DOWN_ANIM';
-  static PLAYER_UP_ANIM_KEY = 'PLAYER_UP_ANIM';
+  static PLAYER_SPRITE = 'PLAYER_SPRITE';
+  static IDLE_ANIM_KEY = 'IDLE_ANIM';
+  static RUN_ANIM_KEY = 'RUN_ANIM';
+  static SHOT_ANIM_KEY = 'SHOT_ANIM';
+  static HIT_ANIM_KEY = 'HIT_ANIM';
+  static ATTACK_ANIM_KEY = 'ATTACK_ANIM';
+  static DEATH_ANIM_KEY = 'DEATH_ANIM';
 
   // keyboard
   cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
@@ -22,14 +24,38 @@ export default class MainPlayer extends Character {
   sprite!: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
 
   handlePreload() {
-    // getScene().load.spritesheet(MainPlayer.SPRITESHEET_KEY, 'assets/personajes-lanto.png', {
+    // getScene().load.spritesheet(MainPlayer.RUN_SPRITESHEET_KEY, 'assets/personajes-lanto.png', {
     //   frameWidth: 32,
     //   frameHeight: 32,
     // });
 
-    getScene().load.spritesheet(MainPlayer.SPRITESHEET_KEY, 'assets/hld.png', {
-      frameWidth: 32,
-      frameHeight: 32,
+    // getScene().load.spritesheet(MainPlayer.RUN_SPRITESHEET_KEY, 'assets/hld.png', {
+    //   frameWidth: 32,
+    //   frameHeight: 32,
+    // });
+
+    // getScene().load.spritesheet(
+    //   MainPlayer.RIGHT_RUN_SPRITESHEET_KEY,
+    //   'assets/sprites/ShotgunnerResized/Original/run.png',
+    //   {
+    //     frameWidth: 32,
+    //     frameHeight: 35,
+
+    //   }
+    // );
+
+    // getScene().load.spritesheet(
+    //   MainPlayer.LEFT_RUN_SPRITESHEET_KEY,
+    //   'assets/sprites/ShotgunnerResized/Mirror/run_left.png',
+    //   {
+    //     frameWidth: 32,
+    //     frameHeight: 35,
+    //   }
+    // );
+
+    getScene().load.spritesheet(MainPlayer.PLAYER_SPRITE, 'assets/sprites/Shotgunner/ShotgunnerAllSprites.png', {
+      frameWidth: 192,
+      frameHeight: 192,
     });
 
     this.weapons = new Map();
@@ -48,8 +74,10 @@ export default class MainPlayer extends Character {
     this.keys.set('q', getScene().input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q));
     this.keys.set('w', getScene().input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W));
     this.keys.set('e', getScene().input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E));
-    this.sprite = getScene().physics.add.sprite(this.initPosition.x, this.initPosition.y, MainPlayer.SPRITESHEET_KEY);
+    this.sprite = getScene().physics.add.sprite(this.initPosition.x, this.initPosition.y, MainPlayer.PLAYER_SPRITE);
+    this.sprite.setBodySize(32, 32, true);
     this.sprite.scale = 2;
+
     this.createPlayerAnims();
   }
 
@@ -78,15 +106,17 @@ export default class MainPlayer extends Character {
     }
 
     if (this.cursors.left.isDown) {
-      this.sprite.anims.play(MainPlayer.PLAYER_LEFT_ANIM_KEY, true);
+      this.sprite.anims.play(MainPlayer.RUN_ANIM_KEY, true);
+      this.sprite.setFlipX(true);
     } else if (this.cursors.right.isDown) {
-      this.sprite.anims.play(MainPlayer.PLAYER_RIGHT_ANIM_KEY, true);
+      this.sprite.anims.play(MainPlayer.RUN_ANIM_KEY, true);
+      this.sprite.setFlipX(false);
     } else if (this.cursors.down.isDown) {
-      this.sprite.anims.play(MainPlayer.PLAYER_DOWN_ANIM_KEY, true);
+      this.sprite.anims.play(MainPlayer.RUN_ANIM_KEY, true);
     } else if (this.cursors.up.isDown) {
-      this.sprite.anims.play(MainPlayer.PLAYER_UP_ANIM_KEY, true);
+      this.sprite.anims.play(MainPlayer.RUN_ANIM_KEY, true);
     } else {
-      this.sprite.anims.play('idle', true);
+      this.sprite.anims.play(MainPlayer.IDLE_ANIM_KEY, true);
     }
   }
 
@@ -105,49 +135,70 @@ export default class MainPlayer extends Character {
       w.activate(this.times.get(k));
       if (w.handleUpdate(time, delta)) {
         getScene().sound.play(w.key);
+        this.sprite.anims.play(MainPlayer.HIT_ANIM_KEY, true);
       }
     });
   }
 
   private createPlayerAnims() {
     getScene().anims.create({
-      key: MainPlayer.PLAYER_LEFT_ANIM_KEY,
-      frames: getScene().anims.generateFrameNumbers(MainPlayer.SPRITESHEET_KEY, {
-        start: 24,
-        end: 35,
-      }),
-      frameRate: 15,
-      repeat: -1,
-    });
-
-    getScene().anims.create({
-      key: MainPlayer.PLAYER_RIGHT_ANIM_KEY,
-      frames: getScene().anims.generateFrameNumbers(MainPlayer.SPRITESHEET_KEY, {
-        start: 36,
-        end: 47,
-      }),
-      frameRate: 15,
-      repeat: -1,
-    });
-
-    getScene().anims.create({
-      key: MainPlayer.PLAYER_UP_ANIM_KEY,
-      frames: getScene().anims.generateFrameNumbers(MainPlayer.SPRITESHEET_KEY, {
+      key: MainPlayer.IDLE_ANIM_KEY,
+      frames: getScene().anims.generateFrameNumbers(MainPlayer.PLAYER_SPRITE, {
         start: 0,
-        end: 11,
+        end: 6,
       }),
       frameRate: 15,
       repeat: -1,
     });
 
     getScene().anims.create({
-      key: MainPlayer.PLAYER_DOWN_ANIM_KEY,
-      frames: getScene().anims.generateFrameNumbers(MainPlayer.SPRITESHEET_KEY, {
-        start: 12,
-        end: 23,
+      key: MainPlayer.RUN_ANIM_KEY,
+      frames: getScene().anims.generateFrameNumbers(MainPlayer.PLAYER_SPRITE, {
+        start: 7,
+        end: 14,
       }),
       frameRate: 15,
       repeat: -1,
     });
+
+    // getScene().anims.create({
+    //   key: MainPlayer.SHOT_ANIM_KEY,
+    //   frames: getScene().anims.generateFrameNumbers(MainPlayer.PLAYER_SPRITE, {
+    //     start: 15,
+    //     end: 20,
+    //   }),
+    //   frameRate: 15,
+    //   repeat: -1,
+    // });
+
+    // getScene().anims.create({
+    //   key: MainPlayer.HIT_ANIM_KEY,
+    //   frames: getScene().anims.generateFrameNumbers(MainPlayer.PLAYER_SPRITE, {
+    //     start: 21,
+    //     end: 22,
+    //   }),
+    //   frameRate: 15,
+    //   repeat: -1,
+    // });
+
+    // getScene().anims.create({
+    //   key: MainPlayer.ATTACK_ANIM_KEY,
+    //   frames: getScene().anims.generateFrameNumbers(MainPlayer.PLAYER_SPRITE, {
+    //     start: 23,
+    //     end: 28,
+    //   }),
+    //   frameRate: 15,
+    //   repeat: -1,
+    // });
+
+    // getScene().anims.create({
+    //   key: MainPlayer.DEATH_ANIM_KEY,
+    //   frames: getScene().anims.generateFrameNumbers(MainPlayer.PLAYER_SPRITE, {
+    //     start: 29,
+    //     end: 39,
+    //   }),
+    //   frameRate: 15,
+    //   repeat: -1,
+    // });
   }
 }
